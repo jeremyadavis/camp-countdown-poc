@@ -1,22 +1,66 @@
 import { StyleSheet } from 'react-native';
+import Countdown from 'react-countdown';
 
 import { Text, View } from '../components/Themed';
 
-export default function SessionCountdownCard() {
+const months = [
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December',
+];
+
+const renderer = ({ days, hours, minutes, seconds, completed }) => {
+  if (completed) {
+    // Render a completed state
+    return <Text>done</Text>;
+  } else {
+    // Render a countdown
+    return (
+      <Text>
+        {days}:{hours}:{minutes}:{seconds}
+      </Text>
+    );
+  }
+};
+
+type Props = {
+  campName: string;
+  sessionName: string;
+  sessionStartDate: Date;
+  sessionEndDate: Date;
+};
+
+export default function SessionCountdownCard({
+  campName,
+  sessionName,
+  sessionStartDate,
+  sessionEndDate,
+}: Props) {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.title}>Camp A</Text>
+        <Text style={styles.title}>{campName}</Text>
 
         <View style={styles.sessionDetails}>
-          <Text style={styles.sessionName}>Session X</Text>
-          <Text>May 1 - May 7</Text>
+          <Text style={styles.sessionName}>{sessionName}</Text>
+          <Text>
+            {months[sessionStartDate.getMonth()]} {sessionStartDate.getDate()} -{' '}
+            {months[sessionEndDate.getMonth()]} {sessionEndDate.getDate()}
+          </Text>
         </View>
       </View>
+
       <View style={styles.countdown}>
-        <Text>5 days</Text>
-        <Text>22 hours</Text>
-        <Text>7 minutes</Text>
+        <Countdown date={sessionStartDate.toISOString()} renderer={renderer} />
       </View>
     </View>
   );
